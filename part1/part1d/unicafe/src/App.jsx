@@ -25,24 +25,68 @@ const Button=({onClick,text})=>{
   )
 }
 
+
+const StatisticLine=({text ,value})=>{
+return(
+  <>
+  <tr>
+  <td>{text} </td>
+  <td> {value}</td>
+  </tr>
+  
+  </>
+)
+}
+
+const Statistics = (props) => {
+if (props.total===0) {
+  return(
+    <>
+    <p>we don't have any feedback unil now</p>
+    </>
+  )
+  
+}
+
+  return(
+    <>
+    <h3>Statistics</h3>
+    <table border={1}>
+      <tbody>
+      <StatisticLine text={"good"} value={props.good}/>
+     <StatisticLine text={"bad"} value={props.bad}/>
+     <StatisticLine text={"neutral"} value={props.neutral}/>
+     <StatisticLine text={"total"} value={props.total}/>
+      <Avarege bad={props.bad} good={props.good} total={props.total}/>
+      </tbody>
+    
+    </table>
+    
+   
+    </>
+  )
+}
+
 const Avarege=({bad,good,total})=>{
 
   const goodMinusBad=good-bad;
 
   const avaregeCount=goodMinusBad/total;
   const percenage=(good*100)/total
-  if(total===0){
-    return(
-    <>
-    <p>we don't have any feedback until now</p>
-    </>
-    )
-  }
+ 
+
 
   return(
     <>
-    <p>avarege is {avaregeCount}</p>
-    <p>percenage is {percenage}%</p>
+    <tr>
+      <td>avarege</td>
+      <td>{avaregeCount}</td>
+    </tr>
+    <tr>
+      <td>percenage</td>
+      <td>{percenage}%</td>
+    </tr>
+    
     </>
   )
 
@@ -75,11 +119,7 @@ const App = () => {
       <Button onClick={badfeedBack} text={"bad"}/>
       <Button onClick={neutralFeedBack} text={"neutral"}/>
       <Button onClick={goodFeedBack} text={"good"}/>
-      <p>good: <Display text={good}/> </p>
-      <p>bad: <Display text={bad}/> </p>
-      <p>neutral: <Display text={neutral}/> </p>
-      <p>total: <Display text={total}/> </p>
-      <Avarege bad={bad} good={good} total={total}/>
+      <Statistics bad={bad} good={good} neutral={neutral} total={total}/>
 
     </div>
   )
