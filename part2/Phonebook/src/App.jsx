@@ -11,8 +11,15 @@ const App = () => {
     const objectName={
       name:newName
     }
-    setPersons(persons.concat(objectName))
+    const hasName=persons.some(person=>person.name===newName)
+    if(!hasName){
+       setPersons(persons.concat(objectName))
     setNewName('')
+    }
+    else{
+      alert(`${newName} is already added to phonebook`)
+    }
+   
   }
 const handleNewNAme=(event)=>{
  setNewName(event.target.value)
@@ -22,7 +29,7 @@ const handleNewNAme=(event)=>{
   return (
     <div>
       <h2>Phonebook</h2>
-      <form onSubmit={handeleAddName}>
+      <form onSubmit={handleAddName}>
         <div>
           name: <input 
           value={newName}
