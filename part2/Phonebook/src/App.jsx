@@ -1,4 +1,8 @@
 import { useState } from 'react'
+import InputPerson from './Components/InputPerson'
+import Filter from './Components/Filter'
+import Pereson from './Components/Persons'
+
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -10,6 +14,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const[newNumber,setNewNumber]=useState("")
   const [filterBy,setFilterBy]=useState('')
+
+
   const handleAddName=(event)=>{
     event.preventDefault()
     const personObject={
@@ -31,6 +37,7 @@ const App = () => {
 
   const personFilter=persons.filter(person=>person.name.toLowerCase().includes(filterBy.toLowerCase()))
 console.log(personFilter)
+
 const handleNewNAme=(event)=>{
  setNewName(event.target.value)
 
@@ -48,35 +55,26 @@ const handleChangeFilterBy=(event)=>{
   return (
     <div>
       <h2>Phonebook</h2>
-      <form onSubmit={handleAddName}>
-        <div>
-          name: <input 
-          value={newName}
-          onChange={handleNewNAme}
-          />
 
-          Number:<input
-           type="text"
-           value={newNumber}
-          onChange={handleNewNumber}
-          />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <InputPerson 
+      onSubmit={handleAddName}
+      nameValue={newName}
+      onChangeName={handleNewNAme}
+      numberValue={newNumber}
+      onchangeNumber={handleNewNumber}
+      />  
+
+
+
       <h2>Numbers</h2>
-  
-      filter by name <input type="text" value={filterBy} onChange={handleChangeFilterBy}/>
 
+
+      <Filter 
+      felterValue={filterBy}
+      onChange={handleChangeFilterBy}
+      />
+     <Pereson personFilter={personFilter}/>
     
-      <ul>
-
-        {personFilter.map(person=> 
-          <li key={person.name}>user name: {person.name} phone number {person.number} id is{person.id} </li>
-        )}
-      
-      </ul>
 
       </div>
   )
