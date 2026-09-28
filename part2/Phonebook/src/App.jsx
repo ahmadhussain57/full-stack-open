@@ -3,13 +3,15 @@ import InputPerson from './Components/InputPerson'
 import Filter from './Components/Filter'
 import Pereson from './Components/Persons'
 import memberService from "./service/memberService"
-
+import Notifcation from './Components/Nontfication'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const[newNumber,setNewNumber]=useState("")
   const [filterBy,setFilterBy]=useState('')
+  const [notification,setNotification]=useState(null)
+
 
   const hookPersons=()=>{
     memberService.getAll()
@@ -32,10 +34,33 @@ const App = () => {
     const hasName=persons.some(person=>person.name===newName)
     if(!hasName){
       memberService.create(personObject)
-      .then(response=>setPersons(persons.concat(response)))
+      .then(response=>{
+        setPersons(persons.concat(response))
+        setNotification({
+        text:`added ${response.name}`,
+        type:'success'
+
+      })
+      setNewName('')
+      setNewNumber('')
+
+      setTimeout(() => {
+  setNotification(null)
+}, 5000)
+      })
+      
+    .catch(Error=>{
+      setNotification({
+        text:`an error in added`,
+        type:'failed'
+    })
+     setTimeout(() => {
+     setNotification(null)
+      }, 5000)      
+      
+    })
        
-    setNewName('')
-    setNewNumber('')
+   
     }
     else{
       if (window.confirm(`${newName} is already added to phonebook,do you want to update the number`)) {
@@ -44,9 +69,39 @@ const App = () => {
         console.log(personUpdate)
         memberService.update(personUpdate.id,personObject).then(response=>{
           setPersons(persons.map(person=>person.id===personUpdate.id?response:person))
-        })
+          setNotification({
+        text:`update ${response.name}`,
+        type:'success'
+
+      })
+       setNewName('')
+       setNewNumber('')
+      setTimeout(() => {
+      setNotification(null)
+      }, 5000)
+      })
+      .catch(error=>{
+        if (error.response&&error.response.status === 404) {
+          setNotification({
+      text: `Information of ${newName} has already been removed from server`,
+      type: 'failed'
+    })
+    setPersons(persons.filter(p => p.id !== personUpdate.id))
+    setTimeout(() => {
+            setNotification(null)
+          }, 5000)
+        }else{setNotification({
+        text:`Could not connect to the server. Please check your connection.`,
+        type:'failed'
+    })
+     setTimeout(() => {
+     setNotification(null)
+      }, 5000)   }
+           
+      })
+        
       }
-      
+     
     }
   }
 
@@ -82,6 +137,9 @@ const deleteMember=(id)=>{
 
   return (
     <div>
+
+      <Notifcation info={notification}/>
+
       <h2>Phonebook</h2>
 
       <InputPerson 
