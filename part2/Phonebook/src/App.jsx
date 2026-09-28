@@ -3,7 +3,6 @@ import InputPerson from './Components/InputPerson'
 import Filter from './Components/Filter'
 import Pereson from './Components/Persons'
 import memberService from "./service/memberService"
-import axios from 'axios'
 
 
 const App = () => {
@@ -39,7 +38,15 @@ const App = () => {
     setNewNumber('')
     }
     else{
-      alert(`${newName} is already added to phonebook`)
+      if (window.confirm(`${newName} is already added to phonebook,do you want to update the number`)) {
+        const personUpdate=persons.find(person=>person.name===newName)
+        
+        console.log(personUpdate)
+        memberService.update(personUpdate.id,personObject).then(response=>{
+          setPersons(persons.map(person=>person.id===personUpdate.id?response:person))
+        })
+      }
+      
     }
   }
 
@@ -56,6 +63,21 @@ const handleNewNumber=(e)=>{
 
 const handleChangeFilterBy=(event)=>{
   setFilterBy(event.target.value)
+}
+
+
+const deleteMember=(id)=>{
+  console.log("id is ", id)
+  if(window.confirm("are you sure you want delet it?")){
+    memberService.delet(id)
+  .then(()=>{
+  setPersons(persons.filter(person=>person.id!==id))
+  
+  })
+
+  }
+  
+  
 }
 
   return (
@@ -79,7 +101,7 @@ const handleChangeFilterBy=(event)=>{
       felterValue={filterBy}
       onChange={handleChangeFilterBy}
       />
-     <Pereson personFilter={personFilter}/>
+     <Pereson personFilter={personFilter} onClick={deleteMember}/>
     
 
       </div>
