@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import InputPerson from './Components/InputPerson'
 import Filter from './Components/Filter'
 import Pereson from './Components/Persons'
+import memberService from "./service/memberService"
 import axios from 'axios'
 
 
@@ -12,10 +13,11 @@ const App = () => {
   const [filterBy,setFilterBy]=useState('')
 
   const hookPersons=()=>{
-    axios.get('http://localhost:3001/persons')
+    memberService.getAll()
     .then(response=>{
-      setPersons(response.data)
+      setPersons(response)
     })
+    
   }
 
   useEffect(hookPersons,[])
@@ -27,18 +29,18 @@ const App = () => {
     const personObject={
       name:newName,
       number:newNumber,
-      id:persons.length+1
     }
     const hasName=persons.some(person=>person.name===newName)
     if(!hasName){
-       setPersons(persons.concat(personObject))
+      memberService.create(personObject)
+      .then(response=>setPersons(persons.concat(response)))
+       
     setNewName('')
     setNewNumber('')
     }
     else{
       alert(`${newName} is already added to phonebook`)
     }
-   
   }
 
   const personFilter=persons.filter(person=>person.name.toLowerCase().includes(filterBy.toLowerCase()))
@@ -46,12 +48,10 @@ console.log(personFilter)
 
 const handleNewNAme=(event)=>{
  setNewName(event.target.value)
-
 }
 
 const handleNewNumber=(e)=>{
  setNewNumber(e.target.value)
-
 }
 
 const handleChangeFilterBy=(event)=>{
