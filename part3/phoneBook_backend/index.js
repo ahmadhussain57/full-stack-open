@@ -29,6 +29,11 @@ let Data=[
 app.get('/',(requst,response)=>{
   response.json(Data)
 })
+app.get('/info',(requst,response)=>{
+  const memberNumber=Data.length
+  const thisMoment=new Date
+  response.send(`<p>Phonebook has info for ${memberNumber} people</p> </br> <p>${thisMoment}</p>`)
+})
 
 
 const Port=3001
