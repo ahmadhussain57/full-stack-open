@@ -27,7 +27,7 @@ let persons=[
 ]
 
 app.get('/',(requst,response)=>{
-  response.json(Data)
+  response.json(persons)
 })
 app.get('/info',(requst,response)=>{
   const memberNumber=persons.length
@@ -44,6 +44,12 @@ app.get('/api/persons/:id',(requst,response)=>{
     })
   }
   response.json(person)
+})
+
+app.delete('/api/persons/:id',(requst,response)=>{
+  const id=requst.params.id
+  persons=persons.filter(person=>person.id!==id)
+  response.status(204).end()
 })
 
 
