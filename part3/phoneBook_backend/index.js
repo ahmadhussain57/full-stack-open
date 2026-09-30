@@ -52,6 +52,26 @@ app.delete('/api/persons/:id',(requst,response)=>{
   response.status(204).end()
 })
 
+app.post('/api/persons',(request,response)=>{
+  const body=request.body
+  console.log("post run")
+  if (!body.name||!body.number) {
+    return response.status(400).json({
+      message:'please enter all information'
+    })
+  }
+
+  const person={
+    id:Math.floor(Math.random()*10000),
+    name:body.name,
+    number:body.number
+  }
+
+  persons=persons.concat(person)
+  response.json(person)
+
+})
+
 
 const Port=3001
 app.listen(Port)
