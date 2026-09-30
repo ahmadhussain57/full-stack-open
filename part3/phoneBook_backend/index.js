@@ -37,8 +37,8 @@ app.get('/info',(requst,response)=>{
 
 app.get('/api/persons/:id',(requst,response)=>{
   const id=requst.params.id
-  const person=persons.filter(person=>person.id===id)
-  if (person.length===0) {
+  const person=persons.find(person=>person.id===id)
+  if (!person) {
    return response.status(404).json({
       message:'we dont have this id'
     })
@@ -54,10 +54,16 @@ app.delete('/api/persons/:id',(requst,response)=>{
 
 app.post('/api/persons',(request,response)=>{
   const body=request.body
+  const testPerson=persons.find(person=>person.name===body.name)
+  if (testPerson) {
+    return response.status(400).json({
+      error: 'name must be unique'
+    })
+  }
   console.log("post run")
   if (!body.name||!body.number) {
     return response.status(400).json({
-      message:'please enter all information'
+      error: 'name or number is missing'
     })
   }
 
