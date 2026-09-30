@@ -3,7 +3,7 @@ const app=express()
 
 app.use(express.json())
 
-let Data=[
+let persons=[
     { 
       "id": "1",
       "name": "Arto Hellas", 
@@ -30,9 +30,20 @@ app.get('/',(requst,response)=>{
   response.json(Data)
 })
 app.get('/info',(requst,response)=>{
-  const memberNumber=Data.length
+  const memberNumber=persons.length
   const thisMoment=new Date
   response.send(`<p>Phonebook has info for ${memberNumber} people</p> </br> <p>${thisMoment}</p>`)
+})
+
+app.get('/api/persons/:id',(requst,response)=>{
+  const id=requst.params.id
+  const person=persons.filter(person=>person.id===id)
+  if (person.length===0) {
+   return response.status(404).json({
+      message:'we dont have this id'
+    })
+  }
+  response.json(person)
 })
 
 
