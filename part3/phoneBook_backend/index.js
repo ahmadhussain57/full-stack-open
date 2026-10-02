@@ -1,8 +1,12 @@
 const express=require('express')
 const morgan=require('morgan')
-const app=express()
+const cors=require('cors')
 
+
+
+const app=express()
 app.use(express.json())
+app.use(cors())
 
 morgan.token('body',(request)=>{
   if (request.method==='POST') {
@@ -38,7 +42,8 @@ let persons=[
     }
 ]
 
-app.get('/',(requst,response)=>{
+app.get('/api/persons',(requst,response)=>{
+  console.log(persons)
   response.json(persons)
 })
 app.get('/info',(requst,response)=>{

@@ -1,9 +1,10 @@
 import axios from "axios";
-const baseUrl="http://localhost:3001/persons"
+const baseUrl="http://localhost:3001/api/persons"
 
 
 const getAll=()=>{
    const requst= axios.get(baseUrl)
+   console.log(requst.then(res=>res.data))
    return requst.then(response=>response.data)
 }
 const create=(objectPerson)=>{
