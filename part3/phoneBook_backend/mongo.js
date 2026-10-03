@@ -1,6 +1,6 @@
 const mongoose=require('mongoose')
 
-if (process.argv.length<5) {
+if (process.argv.length===4||process.argv.length<3) {
     console.log("please enter all deatilse");
     process.exit(1)
 }
@@ -13,10 +13,12 @@ mongoose.connect(url,{family:4})
 
 const personeSchema=new mongoose.Schema({
     name:String,
-    number:Number
+    number:String
 })
 
 const Person=mongoose.model('Person',personeSchema)
+
+if (process.argv.length===5) {
 
 
 const person=new Person({
@@ -25,7 +27,27 @@ const person=new Person({
 })
 
 person.save().then(result=>{
-    console.log("saving person done!!")
+    console.log(`add ${result.name} number ${result.number} to phonebook`)
     mongoose.connection.close()
 })
+
+}
+
+
+
+
+
+if (process.argv.length===3) {
+  
+
+Person.find({}).then(result=>{
+    console.log("persons:");
+    result.map(person=>{
+        console.log(`${person.name} ${person.number}`)
+    })
+    mongoose.connection.close()
+})
+
+
+}
 
