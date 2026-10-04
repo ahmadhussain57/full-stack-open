@@ -60,7 +60,8 @@ app.post('/api/persons',(request,response,next)=>{
   })
   person.save().then(result=>{
     response.json(result)
-  }).catch(error=>next(error))
+  })
+  .catch(error=>next(error))
 })
 
 app.put('/api/persons/:id',(request,response,next)=>{
