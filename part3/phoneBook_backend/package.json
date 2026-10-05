@@ -8,7 +8,7 @@
     "dev": "node --watch index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:ui": "rm -rf dist && cd ../../part2/Phonebook && npm run build && cp -r dist ../../part3/phoneBook_backend",
-    "deploy:full": "npm run build:ui && cd ../../ && git add part3/phoneBook_backend/ && git commit -m uibuild && git push"
+    "deploy:full": "npm run build:ui && cd ../../ && git add part3/phoneBook_backend/ && git commit -m 'part3 section d ex 3.19 3.20 .21' && git push"
   },
   "keywords": [],
   "author": "",
