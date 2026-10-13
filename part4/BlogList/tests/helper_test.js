@@ -26,7 +26,7 @@ likes:5
 
 const blogsInDb=async()=>{
     const result=await Blog.find({})
-    return result.map(n=>n.toJSON)
+    return result.map(n=>n.toJSON())
 }
 
 module.exports={

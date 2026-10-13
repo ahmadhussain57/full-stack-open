@@ -27,13 +27,36 @@ test('all blogs reterned',async()=>{
     assert.strictEqual(result.body.length,helper.initialBlogs.length)
 })
 
-test.only('id is uniqe and it\'s a varable ',async()=>{
+test('id is uniqe and it\'s a varable ',async()=>{
     const blogs =await api.get('/api/blogs')
 
     const oneBlog=blogs.body[0]
 
     assert.ok(oneBlog.id)
     assert.strictEqual(oneBlog._id, undefined)
+})
+
+
+test.only('post api',async()=>{
+    const blogToAdd = {
+        title: 'new blog',
+        author: 'Ahmad Hussain',
+        url: 'https://example.com',
+        likes: 10
+    }
+    await api
+    .post('/api/blogs')
+    .send(blogToAdd)
+    .expect(201)
+    .expect('Content-Type',/application\/json/)
+
+
+    const blogsAtEnd=await helper.blogsInDb()
+    assert.strictEqual( blogsAtEnd.length,helper.initialBlogs.length+1)
+    const blogsTitle=blogsAtEnd.map(b=>b.title)    
+    assert(blogsTitle.includes('new blog'))
+
+
 })
 
 after(async()=>{
