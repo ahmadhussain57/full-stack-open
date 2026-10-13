@@ -22,9 +22,18 @@ test('blods are returend as json',async()=>{
         .expect('Content-type',/application\/json/)
 })
 
-test.only('all blogs reterned',async()=>{
+test('all blogs reterned',async()=>{
     const result=await api.get('/api/blogs')
     assert.strictEqual(result.body.length,helper.initialBlogs.length)
+})
+
+test.only('id is uniqe and it\'s a varable ',async()=>{
+    const blogs =await api.get('/api/blogs')
+
+    const oneBlog=blogs.body[0]
+
+    assert.ok(oneBlog.id)
+    assert.strictEqual(oneBlog._id, undefined)
 })
 
 after(async()=>{
