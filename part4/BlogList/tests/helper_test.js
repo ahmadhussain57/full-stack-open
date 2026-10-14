@@ -47,5 +47,5 @@ const createFakeId=async()=>{
 module.exports={
     initialBlogs,
     blogsInDb,
-    creatFakeId,
+    createFakeId,
 }

@@ -138,7 +138,54 @@ describe('delete a blog',()=>{
 
     })
 })
+describe('eait a blog',()=>{
+    test('edit sucucess',async()=>{
+        const blogsBefore=await helper.blogsInDb()
+        const blogToEdit=blogsBefore[0]
+        const blogToEditId=blogToEdit.id
+        blogToEdit.likes=22
 
+
+        await api
+        .put(`/api/blogs/${blogToEditId}`)
+        .send(blogToEdit)
+        .expect(200)
+        .expect('Content-Type',/application\/json/)
+        
+
+        const blogsAfter=await helper.blogsInDb()
+        const blogAfterEdit=blogsAfter[0]
+        assert.deepStrictEqual(blogToEdit,blogAfterEdit)
+    })
+
+    test('edit an id not exist',async()=>{
+        const fakeId=await helper.createFakeId()
+        const blogToTest = {
+        title: 'new blog',
+        author: 'Ahmad Hussain',
+        url: 'https://example.com',
+        likes: 10
+    }
+    await api
+    .put(`/api/blogs/${fakeId}`)
+    .send(blogToTest)
+    .expect(404)
+    })
+
+    test('edit bad id',async()=>{
+        const fakeId=123
+        const blogToTest = {
+        title: 'new blog',
+        author: 'Ahmad Hussain',
+        url: 'https://example.com',
+        likes: 10
+    }
+    await api
+    .put(`/api/blogs/${fakeId}`)
+    .send(blogToTest)
+    .expect(400)
+    })
+})
 
 
 })
