@@ -29,7 +29,23 @@ const blogsInDb=async()=>{
     return result.map(n=>n.toJSON())
 }
 
+const createFakeId=async()=>{
+     const fakeBlog=new Blog({
+        title: 'fake blog',
+        author: 'Ahmad Hussain',
+        url: 'https://example.com',
+        likes:0
+    }) 
+
+    const bodyOfFakeBlog=await fakeBlog.save()
+    const fakeID=bodyOfFakeBlog.toJSON().id
+    await Blog.findByIdAndDelete(fakeID)
+    
+    return fakeID
+}
+
 module.exports={
     initialBlogs,
-    blogsInDb
+    blogsInDb,
+    creatFakeId,
 }

@@ -3,8 +3,10 @@ const Blog=require('../models/Blogs')
 
 
 BlogsRouter.get('/', async(request, response) => {
- await Blog.find({})
-    response.json(blogs)
+    const blogs= await Blog.find({})
+            response.json(blogs)
+
+      
   })
 
 
@@ -13,8 +15,13 @@ BlogsRouter.post('/', async(request, response) => {
   if (!blog.likes) {
     blog.likes=0
   }
-    await blog.save()
+  const result= await blog.save()
     response.status(201).json(result)
 })
+
+BlogsRouter.delete('/:id',async(request,response,next)=>{
+   await Blog.findByIdAndDelete(request.params.id)
+    response.status(204).end()
+  })
 
 module.exports=BlogsRouter
