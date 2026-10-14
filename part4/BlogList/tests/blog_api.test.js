@@ -59,7 +59,7 @@ test('post api',async()=>{
 })
 
 
-test.only('likes property is missing',async()=>{
+test('likes property is missing',async()=>{
      const blogToAdd = {
         title: 'new blog',
         author: 'Ahmad Hussain',
@@ -73,7 +73,36 @@ test.only('likes property is missing',async()=>{
 
     console.log(result.body);
     assert.strictEqual(result.body.likes,0)
+})
 
+test.only(' title properties are missing',async()=>{
+     const blogToAdd = {
+        author: 'Ahmad Hussain',
+        url: 'https://example.com',
+        likes:0
+    }
+
+    await api
+    .post('/api/blogs')
+    .send(blogToAdd)
+    .expect(400)
+    .expect('Content-Type',/application\/json/)
+
+
+})
+
+test.only(' url properties are missing',async()=>{
+     const blogToAdd = {
+        title: 'new blog',
+        author: 'Ahmad Hussain',
+        likes:0
+    }
+
+    await api
+    .post('/api/blogs')
+    .send(blogToAdd)
+    .expect(400)
+    .expect('Content-Type',/application\/json/)
 
 
 })
