@@ -37,7 +37,7 @@ test('id is uniqe and it\'s a varable ',async()=>{
 })
 
 
-test.only('post api',async()=>{
+test('post api',async()=>{
     const blogToAdd = {
         title: 'new blog',
         author: 'Ahmad Hussain',
@@ -55,6 +55,25 @@ test.only('post api',async()=>{
     assert.strictEqual( blogsAtEnd.length,helper.initialBlogs.length+1)
     const blogsTitle=blogsAtEnd.map(b=>b.title)    
     assert(blogsTitle.includes('new blog'))
+
+})
+
+
+test.only('likes property is missing',async()=>{
+     const blogToAdd = {
+        title: 'new blog',
+        author: 'Ahmad Hussain',
+        url: 'https://example.com',
+    }
+    const result=await api
+    .post('/api/blogs')
+    .send(blogToAdd)
+    .expect(201)
+    .expect('Content-Type',/application\/json/)
+
+    console.log(result.body);
+    assert.strictEqual(result.body.likes,0)
+
 
 
 })
