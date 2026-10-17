@@ -5,6 +5,10 @@ const bcrypt=require('bcrypt')
 usersRouter.post('/',async(request,response)=>{
     const {username,name,password}=request.body
 
+    if (password.length<3) {
+        return response.status(400).json({error:'password shoduld be 3 length at minimum'})
+    }
+
     const passwordHash=await bcrypt.hash(password,10)
 
     const newUser=new User({
@@ -18,7 +22,7 @@ usersRouter.post('/',async(request,response)=>{
 })
 
 usersRouter.get('/',async(request,response)=>{
-    const users=await User.find({},{username:1,name:1,id:1})
+    const users=await User.find({},{username:1,name:1,id:1}).populate('blogs')
     response.status(200).json(users)
 
 })
