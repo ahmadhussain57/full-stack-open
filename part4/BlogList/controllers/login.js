@@ -28,7 +28,7 @@ loginRouter.post('/',async(request,response)=>{
         process.env.SECRET,
     )
 
-    response.status(201).json({jsonwebtoken:jwtgenerated,userForToken})
+    response.status(200).json({jsonwebtoken:jwtgenerated,userForToken})
 })
 
 module.exports=loginRouter

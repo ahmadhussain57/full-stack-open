@@ -1,7 +1,16 @@
 const BlogsRouter=require('express').Router()
 const Blog=require('../models/Blogs')
 const User=require('../models/users')
+const jwt=require('jsonwebtoken')
 
+
+const getTokenForm=request=>{
+   const authorization=request.get('authorization')
+   if (authorization&&authorization.startsWith('Bearer ')) {
+    return authorization.replace('Bearer ','')
+   }
+   return null
+}
 
 BlogsRouter.get('/', async(request, response) => {
     const blogs= await Blog.find({}).populate('user',{username:1,name:1,id:1})
@@ -11,11 +20,21 @@ BlogsRouter.get('/', async(request, response) => {
 
 BlogsRouter.post('/', async(request, response) => {
   const body = request.body
+
+const decodedToken=jwt.verify(getTokenForm(request),process.env.SECRET)
+
+if (!decodedToken.id) {
+  return response.status(401).json({error:'token invalid'})
+}
+const user=await User.findById(decodedToken.id)
+
   if (!body.likes) {
     body.likes=0
   }
-  const users=await User.find({})
-  const user=users[0]
+
+  if(!user){
+    return response.status(400).json({error:'userId missing or not valid'})
+  }
   const blog=new Blog({
         title: body.title,
         author: body.auther,
