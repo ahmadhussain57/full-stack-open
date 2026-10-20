@@ -17,7 +17,7 @@ mongoose.connect(config.MONGODB_URI, { family: 4 }).then(()=>{
 
 app.use(express.json())
 app.use(middleware.requestLogger)
-
+app.use(middleware.tonkenExtractor)
 
 app.use('/api/blogs',BlogsRouter)
 app.use('/api/users',usersRouter)
