@@ -13,20 +13,9 @@ BlogsRouter.get('/', async(request, response) => {
 
 BlogsRouter.post('/', async(request, response) => {
   const body = request.body
-if(!request.token){
-  return response.status(401).json({error:'token missing'})
-}
-let decodedToken
-try{
- decodedToken=jwt.verify(request.token,process.env.SECRET)
-}catch(error){
-  return response.status(401).json({error:'token invalid'})
-}
 
-if (!decodedToken.id) {
-  return response.status(401).json({error:'token invalid'})
-}
-const user=await User.findById(decodedToken.id)
+
+const user=await User.findById(request.user.id)
 
   if (!body.likes) {
     body.likes=0
@@ -53,25 +42,12 @@ const user=await User.findById(decodedToken.id)
 
 BlogsRouter.delete('/:id',async(request,response,next)=>{
 
-if(!request.token){
-  return response.status(401).json({error:'token missing'})
-}
-let decodedToken
-try{
-  decodedToken=jwt.verify(request.token,process.env.SECRET)
-}catch(error){
-  return response.status(401).json({error:'token invalid'})
-}
-if (!decodedToken) {
-  return response.status(401).json({error:'token invalid'})
-}
-
 const blog=await Blog.findById(request.params.id)
 if(!blog){
   return response.status(404).json({error:'blog not found'})
 }
 
-if (blog.user.toString()!==decodedToken.id) {
+if (blog.user.toString()!==request.user.id) {
   return response.status(401).json({error:'wrong user,you can delete just your blogs'})
 }
 
