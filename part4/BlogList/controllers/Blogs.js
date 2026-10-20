@@ -52,7 +52,32 @@ const user=await User.findById(decodedToken.id)
 })
 
 BlogsRouter.delete('/:id',async(request,response,next)=>{
-   await Blog.findByIdAndDelete(request.params.id)
+
+if(!request.token){
+  return response.status(401).json({error:'token missing'})
+}
+let decodedToken
+try{
+  decodedToken=jwt.verify(request.token,process.env.SECRET)
+}catch(error){
+  return response.status(401).json({error:'token invalid'})
+}
+if (!decodedToken) {
+  return response.status(401).json({error:'token invalid'})
+}
+
+const blog=await Blog.findById(request.params.id)
+if(!blog){
+  return response.status(404).json({error:'blog not found'})
+}
+
+if (blog.user.toString()!==decodedToken.id) {
+  return response.status(401).json({error:'wrong user,you can delete just your blogs'})
+}
+
+
+
+   await blog.deleteOne()
     response.status(204).end()
   })
 
