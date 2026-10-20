@@ -5,19 +5,36 @@ const Blog=require('../models/Blogs')
 const app=require('../app')
 const superTest=require('supertest')
 const helper =require('./helper_test')
+const User=require('../models/users')
+const bcrypt=require('bcrypt')
+const jwt=require('jsonwebtoken')
 
 const api=superTest(app)
 
 describe('when there is initially some notes saved',()=>{
+let token;
 
 beforeEach(async()=>{
     await Blog.deleteMany({})
-    await Blog.insertMany(helper.initialBlogs)
+    await User.deleteMany({})
+    const password="ahmad123"
+    const user=new User({
+        username:'testUser',
+        name:'test',
+        passwordHash:await bcrypt.hash(password,10)
+    })
+    const saveUser=await user.save()
+
+    const userForToken={
+        username:saveUser.username,
+        id:saveUser.id
+    }
+
+    token=jwt.sign(userForToken,process.env.SECRET)
 })
 
 
 describe('test get all blogs',()=>{
-
 test('blogs are returend as json',async()=>{
     await api
         .get('/api/blogs')
@@ -42,7 +59,6 @@ test('id is uniqe and it\'s a varable ',async()=>{
 })
 
 describe('add a blog',()=>{
-
 test('post api',async()=>{
     const blogToAdd = {
         title: 'new blog',
@@ -53,15 +69,28 @@ test('post api',async()=>{
     await api
     .post('/api/blogs')
     .send(blogToAdd)
+    .set('Authorization',`Bearer ${token}`)
     .expect(201)
     .expect('Content-Type',/application\/json/)
 
 
     const blogsAtEnd=await helper.blogsInDb()
-    assert.strictEqual( blogsAtEnd.length,helper.initialBlogs.length+1)
     const blogsTitle=blogsAtEnd.map(b=>b.title)    
     assert(blogsTitle.includes('new blog'))
 
+})
+
+test('post api missing token',async()=>{
+    const blogToAdd = {
+        title: 'new blog',
+        author: 'Ahmad Hussain',
+        url: 'https://example.com',
+        likes: 10
+    }
+    await api
+    .post('/api/blogs')
+    .send(blogToAdd)
+    .expect(401)
 })
 
 

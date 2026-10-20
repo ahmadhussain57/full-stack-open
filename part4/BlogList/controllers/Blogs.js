@@ -1,7 +1,6 @@
 const BlogsRouter=require('express').Router()
 const Blog=require('../models/Blogs')
 const User=require('../models/users')
-const jwt=require('jsonwebtoken')
 
 
 
@@ -11,9 +10,12 @@ BlogsRouter.get('/', async(request, response) => {
   })
 
 
-BlogsRouter.post('/', async(request, response) => {
+BlogsRouter.post('/',async(request, response) => {
   const body = request.body
-
+  if (!request.user) {
+     return response.status(401).json({error:'userId missing or not valid'})
+  }
+console.log(request.user);
 
 const user=await User.findById(request.user.id)
 
