@@ -1,11 +1,22 @@
-const Blog = ({ blog }) => {
+import { useState } from "react"
 
+const Blog = ({ blog,saveBlog }) => {
+console.log(blog)
+const [thisBlog,setThisBlog]=useState(blog)
+const updateBlog=()=>{
+  const newBlog={
+    ...thisBlog,
+    likes:thisBlog.likes+1
+  }
+  setThisBlog(newBlog)
+  saveBlog(newBlog)
+}
   return(
 
   <div >
-    <p>{blog.url}</p>
-    <p>{blog.likes} <button>like</button></p>
-    <p>{blog.author}</p>
+    <p>{thisBlog.url}</p>
+    <p>{thisBlog.likes} <button onClick={updateBlog}>like</button></p>
+    <p>{thisBlog.author}</p>
   </div>  
   )
 }

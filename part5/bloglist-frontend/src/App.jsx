@@ -13,8 +13,11 @@ const App = () => {
   const [notification,setNotification]=useState(null)
 
 const blogFoRef=useRef()
-const hideBlog=useRef()
-  
+
+const UpdateBlog=async(newBlog)=>{
+  await blogService.updateBlog(newBlog)
+}
+
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
@@ -93,7 +96,7 @@ const hideBlog=useRef()
       <h2>blogs</h2>
       {blogs.map(blog =>
        <Toggleable buttonName="show"   text={blog.title}>
-         <Blog key={blog.id} blog={blog} />
+         <Blog key={blog.id} blog={blog} saveBlog={UpdateBlog} />
        </Toggleable>
       )}
     </div>
