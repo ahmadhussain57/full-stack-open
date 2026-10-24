@@ -13,6 +13,7 @@ const App = () => {
   const [notification,setNotification]=useState(null)
 
 const blogFoRef=useRef()
+const hideBlog=useRef()
   
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -91,7 +92,9 @@ const blogFoRef=useRef()
       </Toggleable>
       <h2>blogs</h2>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+       <Toggleable buttonName="show"   text={blog.title}>
+         <Blog key={blog.id} blog={blog} />
+       </Toggleable>
       )}
     </div>
   )
