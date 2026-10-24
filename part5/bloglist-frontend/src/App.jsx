@@ -11,6 +11,7 @@ const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user,setUser]=useState(null)
   const [notification,setNotification]=useState(null)
+  const sortedBlogs=[...blogs].sort((a,b)=>b.likes-a.likes);
 
 const blogFoRef=useRef()
 
@@ -94,7 +95,7 @@ const UpdateBlog=async(newBlog)=>{
           <BlogForm saveBlog={saveBlog}/>
       </Toggleable>
       <h2>blogs</h2>
-      {blogs.map(blog =>
+      {sortedBlogs.map(blog =>
        <Toggleable buttonName="show"   text={blog.title}>
          <Blog key={blog.id} blog={blog} saveBlog={UpdateBlog} />
        </Toggleable>
