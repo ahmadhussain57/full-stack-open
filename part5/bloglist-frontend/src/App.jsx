@@ -81,6 +81,19 @@ const UpdateBlog=async(newBlog)=>{
       </>
       )
   }
+
+  const deleteB=async(bId)=>{
+    try {
+    blogService.deleteBlog(bId)
+    const blogsAfter=blogs.filter(b=>b.id!==bId)
+    setBlogs(blogsAfter)
+    } catch (error) {
+      setNotification(error.message)
+      setTimeout(()=>{
+        setNotification(null)
+      },5000)
+    }
+  }
   return (
     <div>
       {user&&(
@@ -97,7 +110,7 @@ const UpdateBlog=async(newBlog)=>{
       <h2>blogs</h2>
       {sortedBlogs.map(blog =>
        <Toggleable buttonName="show"   text={blog.title}>
-         <Blog key={blog.id} blog={blog} saveBlog={UpdateBlog} />
+         <Blog key={blog.id} blog={blog} saveBlog={UpdateBlog} deletFun={deleteB}/>
        </Toggleable>
       )}
     </div>
