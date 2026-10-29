@@ -1,10 +1,10 @@
-const Notification=({notifi})=>{
+const Notification=({ notifi }) => {
 
-return(
+  return(
     <>
-    <h2>{notifi}</h2>
+      <h2>{notifi}</h2>
     </>
-)
+  )
 
 
 }

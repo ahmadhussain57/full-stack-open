@@ -11,85 +11,85 @@ const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user,setUser]=useState(null)
   const [notification,setNotification]=useState(null)
-  const sortedBlogs=[...blogs].sort((a,b)=>b.likes-a.likes);
+  const sortedBlogs=[...blogs].sort((a,b) => b.likes-a.likes)
 
-const blogFoRef=useRef()
+  const blogFoRef=useRef()
 
-const UpdateBlog=async(newBlog)=>{
-  await blogService.updateBlog(newBlog)
-}
+  const UpdateBlog=async(newBlog) => {
+    await blogService.updateBlog(newBlog)
+  }
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
 
-  useEffect(()=>{
+  useEffect(() => {
     const loggedUser=window.localStorage.getItem('loggedUser')
     console.log(loggedUser)
     if(loggedUser){
       const user=JSON.parse(loggedUser)
       setUser(user)
-      console.log(user);
-      blogService.setToken(user.jsonwebtoken) 
+      console.log(user)
+      blogService.setToken(user.jsonwebtoken)
     }
   },[])
 
-  const logout=()=>{
+  const logout=() => {
     window.localStorage.removeItem('loggedUser')
     setUser(null)
   }
 
-  const onlogin=async (credentials)=>{
+  const onlogin=async (credentials) => {
     try {
-    const user =await loginService.login(credentials)
-    setUser(user)
-    window.localStorage.setItem('loggedUser',JSON.stringify(user))
-    console.log(user);
-    } catch (error) {
+      const user =await loginService.login(credentials)
+      setUser(user)
+      window.localStorage.setItem('loggedUser',JSON.stringify(user))
+      console.log(user)
+    } catch{
       setNotification('username or password invalid')
-      setTimeout(()=>{
+      setTimeout(() => {
         setNotification(null)
       },5000)
     }
   }
 
 
-  const saveBlog=async(credenials)=>{
+  const saveBlog=async(credenials) => {
     try {
-    console.log(credenials);
-   const blog=await blogService.addBlog(credenials);
-    setBlogs(blogs.concat(blog))
-    setNotification(`blog add by ${user.username}`)
-    blogFoRef.current.toggleVisible()
-    setTimeout(()=>{
-      setNotification(null)
-    },5000)
-    } catch (error) {
+      console.log(credenials)
+      const blog=await blogService.addBlog(credenials)
+      setBlogs(blogs.concat(blog))
+      setNotification(`blog add by ${user.username}`)
+      blogFoRef.current.toggleVisible()
+      setTimeout(() => {
+        setNotification(null)
+      },5000)
+    } catch {
       setNotification('error in added')
-       setTimeout(()=>{
-      setNotification(null)
-    },5000)
+      setTimeout(() => {
+        setNotification(null)
+      },5000)
     }
   }
   if (!user) {
     return(
       <>
-      <h3>{notification}</h3>
-       <LoginForm onLogin={onlogin}/>
+        <h3>{notification}</h3>
+        <LoginForm onLogin={onlogin}/>
       </>
-      )
+    )
   }
 
-  const deleteB=async(bId)=>{
+  const deleteB=async(bId) => {
     try {
-    blogService.deleteBlog(bId)
-    const blogsAfter=blogs.filter(b=>b.id!==bId)
-    setBlogs(blogsAfter)
+      blogService.deleteBlog(bId)
+      const blogsAfter=blogs.filter(b => b.id!==bId)
+      setBlogs(blogsAfter)
     } catch (error) {
       setNotification(error.message)
-      setTimeout(()=>{
+      setTimeout(() => {
         setNotification(null)
       },5000)
     }
@@ -98,20 +98,20 @@ const UpdateBlog=async(newBlog)=>{
     <div>
       {user&&(
         <>
-        <h3>welcome {user.username}</h3>
-        <Notification notifi={notification}/>
-        <p>you are logged in</p>
-        <button onClick={logout}>logout</button>
+          <h3>welcome {user.username}</h3>
+          <Notification notifi={notification}/>
+          <p>you are logged in</p>
+          <button onClick={logout}>logout</button>
         </>
       )}
       <Toggleable buttonName='creatBlog' ref={blogFoRef}>
-          <BlogForm saveBlog={saveBlog}/>
+        <BlogForm saveBlog={saveBlog}/>
       </Toggleable>
       <h2>blogs</h2>
       {sortedBlogs.map(blog =>
-       <Toggleable buttonName="show"   text={blog.title}>
-         <Blog key={blog.id} blog={blog} saveBlog={UpdateBlog} deletFun={deleteB}/>
-       </Toggleable>
+        <Toggleable buttonName="show"   text={blog.title}>
+          <Blog key={blog.id} blog={blog} saveBlog={UpdateBlog} deletFun={deleteB}/>
+        </Toggleable>
       )}
     </div>
   )

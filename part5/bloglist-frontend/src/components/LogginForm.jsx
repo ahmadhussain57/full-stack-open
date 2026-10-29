@@ -1,43 +1,43 @@
-import { useState } from "react";
+import { useState } from 'react'
 
-const LoginForm=({onLogin})=>{
-   const [username,setUsername]=useState('')
-   const [password,setPassword]=useState('')
-   
-   const handleLogin=e=>{
-    e.preventDefault();
-    onLogin({username,password});
-    setPassword('');
-    setUsername('');
-   }
-   
-    return(
+const LoginForm=({ onLogin }) => {
+  const [username,setUsername]=useState('')
+  const [password,setPassword]=useState('')
+
+  const handleLogin=e => {
+    e.preventDefault()
+    onLogin({ username,password })
+    setPassword('')
+    setUsername('')
+  }
+
+  return(
     <>
-    <form onSubmit={handleLogin}>
+      <form onSubmit={handleLogin}>
         <div>
-            <label>
+          <label>
                 username
-                <input 
-                type="text"
-                value={username}
-                onChange={({target})=>setUsername(target.value)}
-                />
-            </label>
+            <input
+              type="text"
+              value={username}
+              onChange={({ target }) => setUsername(target.value)}
+            />
+          </label>
         </div>
-         <div>
-            <label>
+        <div>
+          <label>
                 password
-                <input 
-                type="password"
-                value={password}
-                onChange={({target})=>setPassword(target.value)}
-                />
-            </label>
+            <input
+              type="password"
+              value={password}
+              onChange={({ target }) => setPassword(target.value)}
+            />
+          </label>
         </div>
         <button type="submit">login</button>
-    </form>
+      </form>
     </>
 
-    ) 
+  )
 }
-export default LoginForm;
+export default LoginForm
